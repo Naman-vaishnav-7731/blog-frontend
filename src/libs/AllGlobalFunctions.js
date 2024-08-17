@@ -1,5 +1,8 @@
 // Here Implementation of all resuable and gloabl function
 
 export const getBaseUrl = () => {
-  return 'http://localhost:3001/'
+  return 'https://blog-backend-zi4a.onrender.com/'
 }
+
+
+
