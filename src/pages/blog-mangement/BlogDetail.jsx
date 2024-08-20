@@ -6,8 +6,10 @@ import { useParams } from 'react-router-dom'
 import { useEffect } from 'react'
 import Loader from '../../components/Loader'
 import moment from 'moment'
+import { useSelector } from 'react-redux'
 
 const BlogDetail = () => {
+  const { accessToken } = useSelector((state) => state?.auth)
   const [blogData, setBlogData] = useState(null)
   const [loading, setLoading] = useState(false)
   const { id } = useParams()
@@ -15,7 +17,11 @@ const BlogDetail = () => {
   const fetchBlogs = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(`${apiPath.getSingleBlog}/${id}`)
+      const response = await axios.get(`${apiPath.getSingleBlog}/${id}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`
+        }
+    })
       if (response.status === 200 && response?.data?.code == 200) {
         setBlogData(response?.data?.data)
       }
