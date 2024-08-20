@@ -21,7 +21,7 @@ const initialVal = {
 }
 
 const BlogList = () => {
-  const { userInfo } = useSelector((state) => state?.auth)
+  const { userInfo, accessToken } = useSelector((state) => state?.auth)
   const [blogs, setBlogs] = useState([])
   const [loading, setLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -38,9 +38,11 @@ const BlogList = () => {
   const fetchBlogs = async () => {
     setLoading(true)
     try {
-      const response = await axios.get(
-        `${apiPath.getAllBlog}/${userInfo?._id}?search=${filterData?.searchText}`
-      )
+      const response = await axios.get(`${apiPath.getAllBlog}/${userInfo?._id}?search=${filterData?.searchText}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`
+        }
+    })
       if (response.status === 200 && response?.data?.code == 200) {
         setBlogs(response)
       }
@@ -56,9 +58,17 @@ const BlogList = () => {
     values = { ...values, userId: userInfo?._id }
     try {
       if (values?._id) {
-        var response = await axios.put(`${apiPath.blog}/${values?._id}`, values);
+        var response = await axios.put(`${apiPath.blog}/${values?._id}`, values,  {
+          headers: {
+              Authorization: `Bearer ${accessToken}`
+          }
+      });
       } else {
-        var response = await axios.post(apiPath.blog, values);
+        var response = await axios.post(apiPath.blog, values,  {
+          headers: {
+              Authorization: `Bearer ${accessToken}`
+          }
+      });
       }
       if (response.status === 200 && response?.data?.code == 200) {
         toast.success(response?.data?.message)
